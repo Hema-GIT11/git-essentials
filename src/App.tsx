@@ -10,7 +10,7 @@ function Home() {
         <div className="icon-wrapper">
           <Github size={64} />
         </div>
-        <h1>GitHub</h1>
+        <h1>GitHub Essentials</h1>
         <p>A simple overview of your GitHub presence.</p>
       </header>
       
