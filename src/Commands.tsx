@@ -17,6 +17,7 @@ function Commands() {
         </div>
         <h1>Powerful Commands</h1>
         <p>Master the terminal with these essential Git secrets.</p>
+        ui improvedd only for dev and main
       </header>
 
       <div className="command-list">
