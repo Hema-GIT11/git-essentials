@@ -18,6 +18,9 @@ function Comparison() {
         <p>Comparing the power of the terminal with the clarity of a GUI. Which one fits your workflow better?</p>
         added new line
       </header>
+
+
+      new line created only for the dev branch
       
       <div className="button-group">
         <Link to="/" className="nav-button secondary">
