@@ -25,6 +25,8 @@ function Commands() {
           <div key={idx} className="command-card">
             <code>{item.cmd}</code>
             <span>{item.desc}</span>
+
+            new changes added to dev
           </div>
         ))}
       </div>

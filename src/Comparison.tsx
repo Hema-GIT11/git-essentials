@@ -17,9 +17,14 @@ function Comparison() {
         <h1>Git CLI vs Desktop</h1>
         <p>Comparing the power of the terminal with the clarity of a GUI. Which one fits your workflow better?</p>
         added new line
+
+
+
+        new changes to dev 2
       </header>
 
 
+      new line created only for the dev branch
 
       nedw line added - only for dev &  main
       
