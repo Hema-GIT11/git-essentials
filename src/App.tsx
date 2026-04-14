@@ -8,32 +8,32 @@ import {
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type ColorKey = 'main' | 'feat' | 'merge' | 'squash' | 'ghost'
-type ModeKey  = 'merge' | 'rebase' | 'squash' | 'branch'
+type ModeKey = 'merge' | 'rebase' | 'squash' | 'branch'
 
 // shape='label' → rounded-rect branch label box; default → circle commit node
-interface GNode  { id: string; x: number; y: number; label: string; color: ColorKey; shape?: 'label' }
-interface GEdge  { from: string; to: string; dashed?: boolean; color?: ColorKey }
-interface Step   { desc: string; nodes: GNode[]; edges: GEdge[] }
+interface GNode { id: string; x: number; y: number; label: string; color: ColorKey; shape?: 'label' }
+interface GEdge { from: string; to: string; dashed?: boolean; color?: ColorKey }
+interface Step { desc: string; nodes: GNode[]; edges: GEdge[] }
 
 // ─── Palette ──────────────────────────────────────────────────────────────────
 
 const C: Record<ColorKey, { fill: string; stroke: string; text: string; glow: string }> = {
-  main:   { fill: '#0e7490', stroke: '#22d3ee', text: '#e0f2fe', glow: '#22d3ee' },
-  feat:   { fill: '#854d0e', stroke: '#fbbf24', text: '#fef9c3', glow: '#f59e0b' },
-  merge:  { fill: '#065f46', stroke: '#34d399', text: '#d1fae5', glow: '#10b981' },
+  main: { fill: '#0e7490', stroke: '#22d3ee', text: '#e0f2fe', glow: '#22d3ee' },
+  feat: { fill: '#854d0e', stroke: '#fbbf24', text: '#fef9c3', glow: '#f59e0b' },
+  merge: { fill: '#065f46', stroke: '#34d399', text: '#d1fae5', glow: '#10b981' },
   squash: { fill: '#6b21a8', stroke: '#c084fc', text: '#f3e8ff', glow: '#a855f7' },
-  ghost:  { fill: 'rgba(255,255,255,0.1)', stroke: '#e2e8f0', text: '#e2e8f0', glow: '#fff' },
+  ghost: { fill: 'rgba(255,255,255,0.1)', stroke: '#e2e8f0', text: '#e2e8f0', glow: '#fff' },
 }
 
 const MODE_COLOR: Record<ModeKey, string> = {
-  merge:  '#34d399',
+  merge: '#34d399',
   rebase: '#22d3ee',
   squash: '#c084fc',
   branch: '#fbbf24',
 }
 
 const MODE_CMD: Record<ModeKey, string> = {
-  merge:  'git merge',
+  merge: 'git merge',
   rebase: 'git rebase',
   squash: 'git merge --squash',
   branch: 'git branch',
@@ -47,8 +47,8 @@ const MODE_CMD: Record<ModeKey, string> = {
 const MY = 380  // main lane y (shiftded further down)
 const FY = 200  // feature lane y
 
-const mn  = (id: string, label: string, x: number, color: ColorKey = 'main'):  GNode => ({ id, x, y: MY, label, color })
-const fn_ = (id: string, label: string, x: number, color: ColorKey = 'feat'):  GNode => ({ id, x, y: FY, label, color })
+const mn = (id: string, label: string, x: number, color: ColorKey = 'main'): GNode => ({ id, x, y: MY, label, color })
+const fn_ = (id: string, label: string, x: number, color: ColorKey = 'feat'): GNode => ({ id, x, y: FY, label, color })
 const lbl = (id: string, label: string, x: number, y: number, color: ColorKey): GNode => ({ id, x, y, label, color, shape: 'label' })
 
 // ─── Step data ────────────────────────────────────────────────────────────────
@@ -58,33 +58,33 @@ const STEPS: Record<ModeKey, Step[]> = {
     {
       desc: '① Initial state — main branch has two commits: C0 and C1.',
       nodes: [
-        lbl('lmain', 'Main', 90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
       ],
     },
     {
       desc: '② git checkout -b feature from C1 — a new Feature branch is born.',
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
         lbl('lfeat', 'Feature 1', 350, FY, 'feat'),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'lfeat', to:'C1', dashed:true },   // label points down to branch point
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'lfeat', to: 'C1', dashed: true },   // label points down to branch point
       ],
     },
     {
       desc: '③ Three commits added on the feature branch: A → B → C.',
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
         lbl('lfeat', 'Feature 1', 230, FY, 'feat'),
@@ -93,90 +93,90 @@ const STEPS: Record<ModeKey, Step[]> = {
         fn_('C', 'C', 600),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'lfeat', to:'A', dashed:true },
-        { from:'C1',    to:'A' },               // diagonal branch arrow
-        { from:'A',     to:'B' },
-        { from:'B',     to:'C' },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'lfeat', to: 'A', dashed: true },
+        { from: 'C1', to: 'A' },               // diagonal branch arrow
+        { from: 'A', to: 'B' },
+        { from: 'B', to: 'C' },
       ],
     },
     {
       desc: '④ Meanwhile, two more commits land on main: D and E.',
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
-        mn('D',  'D',  460),
-        mn('E',  'E',  570),
+        mn('D', 'D', 460),
+        mn('E', 'E', 570),
         lbl('lfeat', 'Feature 1', 230, FY, 'feat'),
         fn_('A', 'A', 380),
         fn_('B', 'B', 490),
         fn_('C', 'C', 600),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'C1',    to:'D' },
-        { from:'D',     to:'E' },
-        { from:'lfeat', to:'A', dashed:true },
-        { from:'C1',    to:'A' },
-        { from:'A',     to:'B' },
-        { from:'B',     to:'C' },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'C1', to: 'D' },
+        { from: 'D', to: 'E' },
+        { from: 'lfeat', to: 'A', dashed: true },
+        { from: 'C1', to: 'A' },
+        { from: 'A', to: 'B' },
+        { from: 'B', to: 'C' },
       ],
     },
     {
       desc: '⑤ git merge feature — merge commit M is created with two parents: E (main) and C (feature).',
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
-        mn('D',  'D',  460),
-        mn('E',  'E',  570),
-        mn('M',  'M',  670, 'merge'),
+        mn('D', 'D', 460),
+        mn('E', 'E', 570),
+        mn('M', 'M', 670, 'merge'),
         lbl('lfeat', 'Feature 1', 230, FY, 'feat'),
         fn_('A', 'A', 380),
         fn_('B', 'B', 490),
         fn_('C', 'C', 600),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'C1',    to:'D' },
-        { from:'D',     to:'E' },
-        { from:'E',     to:'M' },
-        { from:'C',     to:'M' },        // diagonal from feature to merge commit
-        { from:'lfeat', to:'A', dashed:true },
-        { from:'C1',    to:'A' },
-        { from:'A',     to:'B' },
-        { from:'B',     to:'C' },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'C1', to: 'D' },
+        { from: 'D', to: 'E' },
+        { from: 'E', to: 'M' },
+        { from: 'C', to: 'M' },        // diagonal from feature to merge commit
+        { from: 'lfeat', to: 'A', dashed: true },
+        { from: 'C1', to: 'A' },
+        { from: 'A', to: 'B' },
+        { from: 'B', to: 'C' },
       ],
     },
     {
       desc: '✅ Merge complete. Both branch histories preserved. The "V" shape shows exactly where feature diverged and rejoined.',
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
-        mn('D',  'D',  460),
-        mn('E',  'E',  570),
-        mn('M',  'M',  670, 'merge'),
+        mn('D', 'D', 460),
+        mn('E', 'E', 570),
+        mn('M', 'M', 670, 'merge'),
         lbl('lfeat', 'Feature 1', 230, FY, 'feat'),
         fn_('A', 'A', 380),
         fn_('B', 'B', 490),
         fn_('C', 'C', 600),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'C1',    to:'D' },
-        { from:'D',     to:'E' },
-        { from:'E',     to:'M' },
-        { from:'C',     to:'M' },
-        { from:'lfeat', to:'A', dashed:true },
-        { from:'C1',    to:'A' },
-        { from:'A',     to:'B' },
-        { from:'B',     to:'C' },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'C1', to: 'D' },
+        { from: 'D', to: 'E' },
+        { from: 'E', to: 'M' },
+        { from: 'C', to: 'M' },
+        { from: 'lfeat', to: 'A', dashed: true },
+        { from: 'C1', to: 'A' },
+        { from: 'A', to: 'B' },
+        { from: 'B', to: 'C' },
       ],
     },
   ],
@@ -185,35 +185,35 @@ const STEPS: Record<ModeKey, Step[]> = {
     {
       desc: '① Initial state: Main branch has commits C0 to E. Feature branch (A, B, C) diverged at C1.',
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
-        mn('D',  'D',  460),
-        mn('E',  'E',  570),
+        mn('D', 'D', 460),
+        mn('E', 'E', 570),
         lbl('lfeat', 'Feature 1', 230, FY, 'feat'),
         fn_('A', 'A', 380),
         fn_('B', 'B', 490),
         fn_('C', 'C', 600),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'C1',    to:'D' },
-        { from:'D',     to:'E' },
-        { from:'lfeat', to:'A', dashed:true },
-        { from:'C1',    to:'A' },
-        { from:'A',     to:'B' },
-        { from:'B',     to:'C' },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'C1', to: 'D' },
+        { from: 'D', to: 'E' },
+        { from: 'lfeat', to: 'A', dashed: true },
+        { from: 'C1', to: 'A' },
+        { from: 'A', to: 'B' },
+        { from: 'B', to: 'C' },
       ],
     },
     {
       desc: '② git rebase main — We start by moving the branch pointer. The original commits are "detached".',
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
-        mn('D',  'D',  460),
-        mn('E',  'E',  570),
+        mn('D', 'D', 460),
+        mn('E', 'E', 570),
         lbl('lrebase', 'Git Rebase', 720, MY, 'squash'),
         lbl('lfeat', 'Feature 1', 230, FY, 'ghost'),
         fn_('A', 'A', 380, 'ghost'),
@@ -221,21 +221,21 @@ const STEPS: Record<ModeKey, Step[]> = {
         fn_('C', 'C', 600, 'ghost'),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'C1',    to:'D' },
-        { from:'D',     to:'E' },
-        { from:'C1',    to:'A' }, // ghosted or removed, here kept as reference
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'C1', to: 'D' },
+        { from: 'D', to: 'E' },
+        { from: 'C1', to: 'A' }, // ghosted or removed, here kept as reference
       ],
     },
     {
       desc: "③ The first commit A is re-applied on top of E as A'. It gets a brand new SHA hash.",
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
-        mn('D',  'D',  460),
-        mn('E',  'E',  570),
+        mn('D', 'D', 460),
+        mn('E', 'E', 570),
         lbl('lrebase', 'Git Rebase', 720, MY, 'squash'),
         fn_("A'", "A'", 660, 'feat'),
         // ghosts
@@ -244,58 +244,58 @@ const STEPS: Record<ModeKey, Step[]> = {
         fn_('C', 'C', 600, 'ghost'),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'C1',    to:'D' },
-        { from:'D',     to:'E' },
-        { from:'E',     to:"A'", dashed:true },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'C1', to: 'D' },
+        { from: 'D', to: 'E' },
+        { from: 'E', to: "A'", dashed: true },
       ],
     },
     {
       desc: "④ B and C are also replayed. The history is now perfectly linear.",
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
-        mn('D',  'D',  460),
-        mn('E',  'E',  570),
+        mn('D', 'D', 460),
+        mn('E', 'E', 570),
         lbl('lrebase', 'Git Rebase', 880, MY, 'squash'),
         fn_("A'", "A'", 660, 'feat'),
         fn_("B'", "B'", 760, 'feat'),
         fn_("C'", "C'", 860, 'feat'),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'C1',    to:'D' },
-        { from:'D',     to:'E' },
-        { from:'E',     to:"A'" },
-        { from:"A'",    to:"B'" },
-        { from:"B'",    to:"C'" },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'C1', to: 'D' },
+        { from: 'D', to: 'E' },
+        { from: 'E', to: "A'" },
+        { from: "A'", to: "B'" },
+        { from: "B'", to: "C'" },
       ],
     },
     {
       desc: "✅ Rebase complete. Feature 1 label now points to the new tip. History is clean and straight.",
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
-        mn('D',  'D',  460),
-        mn('E',  'E',  570),
+        mn('D', 'D', 460),
+        mn('E', 'E', 570),
         lbl('lfeat', 'Feature 1', 980, FY, 'feat'),
         fn_("A'", "A'", 660, 'feat'),
         fn_("B'", "B'", 760, 'feat'),
         fn_("C'", "C'", 860, 'feat'),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'C1',    to:'D' },
-        { from:'D',     to:'E' },
-        { from:'E',     to:"A'" },
-        { from:"A'",    to:"B'" },
-        { from:"B'",    to:"C'" },
-        { from:'lfeat', to:"C'", dashed:true },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'C1', to: 'D' },
+        { from: 'D', to: 'E' },
+        { from: 'E', to: "A'" },
+        { from: "A'", to: "B'" },
+        { from: "B'", to: "C'" },
+        { from: 'lfeat', to: "C'", dashed: true },
       ],
     },
   ],
@@ -304,52 +304,52 @@ const STEPS: Record<ModeKey, Step[]> = {
     {
       desc: '① Main: C0 → C1. Feature branched from C1.',
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
         lbl('lfeat', 'Feature 1', 230, FY, 'feat'),
         fn_('A', 'A', 380),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'lfeat', to:'A', dashed:true },
-        { from:'C1',    to:'A' },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'lfeat', to: 'A', dashed: true },
+        { from: 'C1', to: 'A' },
       ],
     },
     {
       desc: '② WIP commits pile up on feature: A ("fix typo") → B ("wip") → C ("ok FINAL").',
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
-        mn('D',  'D',  460),
-        mn('E',  'E',  570),
+        mn('D', 'D', 460),
+        mn('E', 'E', 570),
         lbl('lfeat', 'Feature 1', 230, FY, 'feat'),
         fn_('A', 'A', 380),
         fn_('B', 'B', 490),
         fn_('C', 'C', 600),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'C1',    to:'D' },
-        { from:'D',     to:'E' },
-        { from:'lfeat', to:'A', dashed:true },
-        { from:'C1',    to:'A' },
-        { from:'A',     to:'B' },
-        { from:'B',     to:'C' },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'C1', to: 'D' },
+        { from: 'D', to: 'E' },
+        { from: 'lfeat', to: 'A', dashed: true },
+        { from: 'C1', to: 'A' },
+        { from: 'A', to: 'B' },
+        { from: 'B', to: 'C' },
       ],
     },
     {
       desc: '③ git merge --squash: A+B+C diffs are combined into one staged change. Old A, B, C are abandoned.',
       nodes: [
-        lbl('lmain', 'Main',      90,  MY, 'main'),
+        lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
-        mn('D',  'D',  460),
-        mn('E',  'E',  570),
-        mn('S',  'S',  670, 'squash'),
+        mn('D', 'D', 460),
+        mn('E', 'E', 570),
+        mn('S', 'S', 670, 'squash'),
         // ghost old
         lbl('lfeat', 'Feature 1', 230, FY, 'ghost'),
         fn_('A', 'A', 380, 'ghost'),
@@ -357,15 +357,15 @@ const STEPS: Record<ModeKey, Step[]> = {
         fn_('C', 'C', 600, 'ghost'),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'C1',    to:'D' },
-        { from:'D',     to:'E' },
-        { from:'E',     to:'S' },
-        { from:'C1',    to:'A' },
-        { from:'A',     to:'B' },
-        { from:'B',     to:'C' },
-        { from:'C',     to:'S', dashed:true },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'C1', to: 'D' },
+        { from: 'D', to: 'E' },
+        { from: 'E', to: 'S' },
+        { from: 'C1', to: 'A' },
+        { from: 'A', to: 'B' },
+        { from: 'B', to: 'C' },
+        { from: 'C', to: 'S', dashed: true },
       ],
     },
     {
@@ -374,16 +374,16 @@ const STEPS: Record<ModeKey, Step[]> = {
         lbl('lmain', 'Main', 90, MY, 'main'),
         mn('C0', 'C0', 230),
         mn('C1', 'C1', 350),
-        mn('D',  'D',  460),
-        mn('E',  'E',  570),
-        mn('S',  'S',  670, 'squash'),
+        mn('D', 'D', 460),
+        mn('E', 'E', 570),
+        mn('S', 'S', 670, 'squash'),
       ],
       edges: [
-        { from:'lmain', to:'C0', dashed:true },
-        { from:'C0',    to:'C1' },
-        { from:'C1',    to:'D' },
-        { from:'D',     to:'E' },
-        { from:'E',     to:'S' },
+        { from: 'lmain', to: 'C0', dashed: true },
+        { from: 'C0', to: 'C1' },
+        { from: 'C1', to: 'D' },
+        { from: 'D', to: 'E' },
+        { from: 'E', to: 'S' },
       ],
     },
   ],
@@ -393,13 +393,13 @@ const STEPS: Record<ModeKey, Step[]> = {
       nodes: [
         mn('A', 'A', 150),
         mn('B', 'B', 425),
-        lbl('lmain', 'main', 425,  MY - 75, 'main'),
-        lbl('lhead', 'HEAD', 425,  MY - 170, 'ghost'),
+        lbl('lmain', 'main', 425, MY - 75, 'main'),
+        lbl('lhead', 'HEAD', 425, MY - 170, 'ghost'),
       ],
       edges: [
-        { from:'A',     to:'B' },
-        { from:'lmain', to:'B', dashed:true },
-        { from:'lhead', to:'lmain', dashed:true, color:'ghost' },
+        { from: 'A', to: 'B' },
+        { from: 'lmain', to: 'B', dashed: true },
+        { from: 'lhead', to: 'lmain', dashed: true, color: 'ghost' },
       ],
     },
     {
@@ -407,9 +407,9 @@ const STEPS: Record<ModeKey, Step[]> = {
       nodes: [
         mn('A', 'A', 150),
         mn('B', 'B', 425),
-        lbl('lmain', 'main', 425,  MY - 75, 'main'),
+        lbl('lmain', 'main', 425, MY - 75, 'main'),
         lbl('lfeat', 'feature-x', 425, FY - 75, 'feat'),
-        lbl('lhead', 'HEAD', 425,  MY - 170, 'ghost'),
+        lbl('lhead', 'HEAD', 425, MY - 170, 'ghost'),
       ],
       edges: [
         { from: 'A', to: 'B' },
@@ -423,9 +423,9 @@ const STEPS: Record<ModeKey, Step[]> = {
       nodes: [
         mn('A', 'A', 150),
         mn('B', 'B', 425),
-        lbl('lmain', 'main', 425,  MY - 75, 'main'),
+        lbl('lmain', 'main', 425, MY - 75, 'main'),
         lbl('lfeat', 'feature-x', 425, FY - 75, 'feat'),
-        lbl('lhead', 'HEAD', 425,  FY - 170, 'ghost'),
+        lbl('lhead', 'HEAD', 425, FY - 170, 'ghost'),
       ],
       edges: [
         { from: 'A', to: 'B' },
@@ -440,9 +440,9 @@ const STEPS: Record<ModeKey, Step[]> = {
         mn('A', 'A', 150),
         mn('B', 'B', 425),
         mn('C', 'C', 700),
-        lbl('lmain', 'main', 425,  MY - 75, 'main'),
+        lbl('lmain', 'main', 425, MY - 75, 'main'),
         lbl('lfeat', 'feature-x', 700, FY - 75, 'feat'),
-        lbl('lhead', 'HEAD', 700,  FY - 170, 'ghost'),
+        lbl('lhead', 'HEAD', 700, FY - 170, 'ghost'),
       ],
       edges: [
         { from: 'A', to: 'B' },
@@ -458,9 +458,9 @@ const STEPS: Record<ModeKey, Step[]> = {
         mn('A', 'A', 150),
         mn('B', 'B', 425),
         mn('C', 'C', 700),
-        lbl('lmain', 'main', 425,  MY - 75, 'main'),
+        lbl('lmain', 'main', 425, MY - 75, 'main'),
         lbl('lfeat', 'feature-x', 700, FY - 75, 'feat'),
-        lbl('lhead', 'HEAD', 425,  MY - 170, 'ghost'),
+        lbl('lhead', 'HEAD', 425, MY - 170, 'ghost'),
       ],
       edges: [
         { from: 'A', to: 'B' },
@@ -475,9 +475,9 @@ const STEPS: Record<ModeKey, Step[]> = {
 
 // ─── Animated Git Graph ───────────────────────────────────────────────────────
 
-const NODE_R    = 35   // circle radius
-const LBL_W     = 100  // label box half-width for connection calc
-const LBL_H     = 28   // label box half-height
+const NODE_R = 35   // circle radius
+const LBL_W = 100  // label box half-width for connection calc
+const LBL_H = 28   // label box half-height
 
 // Get the connection point of a node (edge of circle or edge of label box)
 function outPoint(n: GNode, toward: GNode): [number, number] {
@@ -526,9 +526,9 @@ function makePath(a: GNode, b: GNode): string {
 function GitGraph({ step, allSteps, accentColor }: {
   step: number; allSteps: Step[]; accentColor: string
 }) {
-  const cur      = allSteps[step]
-  const prev     = step > 0 ? allSteps[step - 1] : null
-  const prevIds  = new Set(prev?.nodes.map(n => n.id) ?? [])
+  const cur = allSteps[step]
+  const prev = step > 0 ? allSteps[step - 1] : null
+  const prevIds = new Set(prev?.nodes.map(n => n.id) ?? [])
   const prevEIds = new Set(prev?.edges.map(e => `${e.from}>${e.to}`) ?? [])
 
   const nodeMap: Record<string, GNode> = Object.fromEntries(cur.nodes.map(n => [n.id, n]))
@@ -543,25 +543,25 @@ function GitGraph({ step, allSteps, accentColor }: {
       <defs>
         {/* Arrow markers */}
         <marker id="ag" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-          <path d="M1 2L9 5L1 8" fill="none" stroke="#374151" strokeWidth="1.5" strokeLinejoin="round"/>
+          <path d="M1 2L9 5L1 8" fill="none" stroke="#374151" strokeWidth="1.5" strokeLinejoin="round" />
         </marker>
         <marker id="aa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-          <path d="M1 2L9 5L1 8" fill="none" stroke={accentColor} strokeWidth="2" strokeLinejoin="round"/>
+          <path d="M1 2L9 5L1 8" fill="none" stroke={accentColor} strokeWidth="2" strokeLinejoin="round" />
         </marker>
         {/* Glow filters */}
         {Object.entries(C).map(([k, col]) => (
           <filter key={k} id={`g${k}`}>
-            <feGaussianBlur stdDeviation="3.5" result="b"/>
-            <feFlood floodColor={col.glow} floodOpacity="0.7" result="c"/>
-            <feComposite in="c" in2="b" operator="in" result="cb"/>
-            <feMerge><feMergeNode in="cb"/><feMergeNode in="SourceGraphic"/></feMerge>
+            <feGaussianBlur stdDeviation="3.5" result="b" />
+            <feFlood floodColor={col.glow} floodOpacity="0.7" result="c" />
+            <feComposite in="c" in2="b" operator="in" result="cb" />
+            <feMerge><feMergeNode in="cb" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
         ))}
       </defs>
 
       {/* Lane guide lines */}
-      <line x1="0" y1={MY} x2={vw} y2={MY} stroke="rgba(34,211,238,0.06)" strokeWidth="26" strokeLinecap="round"/>
-      <line x1="0" y1={FY} x2={vw} y2={FY} stroke="rgba(251,191,36,0.05)" strokeWidth="26" strokeLinecap="round"/>
+      <line x1="0" y1={MY} x2={vw} y2={MY} stroke="rgba(34,211,238,0.06)" strokeWidth="26" strokeLinecap="round" />
+      <line x1="0" y1={FY} x2={vw} y2={FY} stroke="rgba(251,191,36,0.05)" strokeWidth="26" strokeLinecap="round" />
 
       {/* ── Edges ── */}
       <AnimatePresence>
@@ -590,9 +590,9 @@ function GitGraph({ step, allSteps, accentColor }: {
       {/* ── Nodes ── */}
       <AnimatePresence>
         {cur.nodes.map(n => {
-          const col    = C[n.color]
-          const isNew  = !prevIds.has(n.id)
-          const ghost  = n.color === 'ghost'
+          const col = C[n.color]
+          const isNew = !prevIds.has(n.id)
+          const ghost = n.color === 'ghost'
 
           if (n.shape === 'label') {
             return (
@@ -655,7 +655,7 @@ function GitGraph({ step, allSteps, accentColor }: {
 function GitModeSlide({ mode, minimal }: { mode: ModeKey, minimal?: boolean }) {
   const [step, setStep] = useState(0)
   const steps = STEPS[mode]
-  const mc    = MODE_COLOR[mode]
+  const mc = MODE_COLOR[mode]
 
   const next = () => step < steps.length - 1 && setStep(s => s + 1)
   const prev = () => step > 0 && setStep(s => s - 1)
@@ -750,6 +750,30 @@ const SLIDES = [
     badge: '', content: null,
   },
   {
+    id: 1.5, type: 'content', badge: 'Roadmap', title: 'Presentation Overview',
+    content: (
+      <div className="grid-2">
+        <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <div className="badge" style={{ background: 'var(--accent-blue)10', color: 'var(--accent-blue)' }}>Phase 1: Foundations</div>
+          <ul className="feature-list" style={{ gap: '0.65rem', fontSize: '1.05rem' }}>
+            <li className="feature-item">What is Git? & Git vs GitHub</li>
+            <li className="feature-item">Syncing Workflows (Commit, Push, Pull)</li>
+            <li className="feature-item">Branching & Visual Mechanics</li>
+          </ul>
+        </div>
+        <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <div className="badge" style={{ background: 'var(--accent-purple)10', color: 'var(--accent-purple)' }}>Phase 2: Advanced Strategy</div>
+          <ul className="feature-list" style={{ gap: '0.65rem', fontSize: '1.05rem' }}>
+            <li className="feature-item">Merge vs Rebase vs Squash</li>
+            <li className="feature-item">Essential Commit Actions</li>
+            <li className="feature-item">CLI vs Desktop & Limitations</li>
+            <li className="feature-item">Stash: GUI vs CLI Mastery</li>
+          </ul>
+        </div>
+      </div>
+    )
+  },
+  {
     id: 2, type: 'content', badge: 'Basics', title: 'What is Git?',
     content: (
       <div className="grid-2">
@@ -798,30 +822,29 @@ const SLIDES = [
   {
     id: 4, type: 'content', badge: 'Workflow', title: 'Commit vs Push',
     content: (
-      <div className="grid-2">
-        <div className="card">
-          <div className="badge" style={{ background: 'rgba(63,185,80,0.15)', color: 'var(--accent-green)' }}>What is Commit?</div>
-          <ul className="feature-list" style={{ gap: '0.85rem', fontSize: '1.15rem' }}>
-            <li className="feature-item">Saving changes locally in Git</li>
-            <li className="feature-item">Creates a project snapshot</li>
-            <li className="feature-item">Unique SHA ID for each</li>
-            <li className="feature-item">Works completely offline</li>
-            <li className="feature-item">Tracks history and changes</li>
+      <div className="grid-2" style={{ gap: '1.5rem', height: '100%' }}>
+        <div className="card" style={{ padding: '1rem 1.5rem', borderLeft: '4px solid var(--accent-green)', background: 'rgba(74, 222, 128, 0.03)' }}>
+          <div className="badge" style={{ background: 'rgba(74, 222, 128, 0.1)', color: 'var(--accent-green)', marginBottom: '0.75rem' }}>Local: Commit</div>
+          <ul className="feature-list" style={{ gap: '0.4rem', fontSize: '1rem' }}>
+            <li className="feature-item"><strong>Snapshot</strong>: Saves state locally</li>
+            <li className="feature-item"><strong>Fingerprint</strong>: Unique SHA-1 ID</li>
+            <li className="feature-item"><strong>Offline</strong>: No network needed</li>
+            <li className="feature-item"><strong>Private</strong>: Work safely alone</li>
           </ul>
-          <div className="code-block" style={{ marginTop: '1.5rem', borderColor: 'var(--accent-green)44' }}>
-            <span style={{ color: 'var(--accent-green)', fontWeight: 800 }}>👉 Commit = Save changes locally</span>
+          <div className="code-block" style={{ marginTop: 'auto', fontSize: '0.8rem', color: 'var(--accent-green)', borderColor: 'rgba(74, 222, 128, 0.2)' }}>
+            👉 git commit -m "update"
           </div>
         </div>
-        <div className="card">
-          <div className="badge" style={{ background: 'rgba(56,189,248,0.15)', color: 'var(--accent-blue)' }}>What is Push?</div>
-          <ul className="feature-list" style={{ gap: '0.85rem', fontSize: '1.15rem' }}>
-            <li className="feature-item">Sends commits to remote repository</li>
-            <li className="feature-item">Uploads code to GitHub/Cloud</li>
-            <li className="feature-item">Requires internet connection</li>
-            <li className="feature-item">Makes changes visible to others</li>
+        <div className="card" style={{ padding: '1rem 1.5rem', borderLeft: '4px solid var(--accent-blue)', background: 'rgba(56, 189, 248, 0.03)' }}>
+          <div className="badge" style={{ background: 'rgba(56, 189, 248, 0.1)', color: 'var(--accent-blue)', marginBottom: '0.75rem' }}>Remote: Push</div>
+          <ul className="feature-list" style={{ gap: '0.4rem', fontSize: '1rem' }}>
+            <li className="feature-item"><strong>Publish</strong>: Send to GitHub/Cloud</li>
+            <li className="feature-item"><strong>Share</strong>: Sync with team</li>
+            <li className="feature-item"><strong>Storage</strong>: Off-site backup</li>
+            <li className="feature-item"><strong>Visible</strong>: Ready for PRs</li>
           </ul>
-          <div className="code-block" style={{ marginTop: '1.5rem', borderColor: 'var(--accent-blue)44' }}>
-            <span style={{ color: 'var(--accent-blue)', fontWeight: 800 }}>👉 Push = Upload commits to remote</span>
+          <div className="code-block" style={{ marginTop: 'auto', fontSize: '0.8rem', color: 'var(--accent-blue)', borderColor: 'rgba(56, 189, 248, 0.2)' }}>
+            👉 git push origin main
           </div>
         </div>
       </div>
@@ -955,17 +978,15 @@ const SLIDES = [
   {
     id: 11, type: 'content', badge: 'Advanced', title: 'Desktop Limitations',
     content: (
-      <div className="grid-2">
+      <div style={{ maxWidth: '800px', margin: '0 auto', width: '100%' }}>
         <div className="card">
-          <ul className="feature-list">
-            <li className="feature-item" style={{ color: 'var(--accent-red)' }}><Lock size={18} />&nbsp;No Interactive Rebase</li>
-            <li className="feature-item" style={{ color: 'var(--accent-red)' }}><Lock size={18} />&nbsp;Complex Conflict Resolving</li>
-            <li className="feature-item" style={{ color: 'var(--accent-red)' }}><Lock size={18} />&nbsp;Detailed History Editing</li>
+          <ul className="feature-list" style={{ gap: '1rem', fontSize: '1.2rem' }}>
+            <li className="feature-item" style={{ color: 'var(--text-primary)' }}><Lock size={20} style={{ color: 'var(--accent-red)', marginRight: '12px' }} />No Interactive Rebase</li>
+            <li className="feature-item" style={{ color: 'var(--text-primary)' }}><Lock size={20} style={{ color: 'var(--accent-red)', marginRight: '12px' }} />Hidden/Auto-stash operations are opaque</li>
+            <li className="feature-item" style={{ color: 'var(--text-primary)' }}><Lock size={20} style={{ color: 'var(--accent-red)', marginRight: '12px' }} />No file-level stashing/restoring</li>
+            <li className="feature-item" style={{ color: 'var(--text-primary)' }}><Lock size={20} style={{ color: 'var(--accent-red)', marginRight: '12px' }} />Limited visibility into internal ops</li>
+            <li className="feature-item" style={{ color: 'var(--text-primary)' }}><Lock size={20} style={{ color: 'var(--accent-red)', marginRight: '12px' }} />Limited support for advanced commands</li>
           </ul>
-        </div>
-        <div className="card" style={{ borderStyle: 'dashed', borderColor: 'var(--text-secondary)' }}>
-          <h4 style={{ marginBottom: '0.75rem' }}>The Conclusion</h4>
-          <p>GUI is great for the 90%, but <strong>CLI is non-negotiable</strong> for the difficult 10% of workflows.</p>
         </div>
       </div>
     ),
@@ -973,11 +994,11 @@ const SLIDES = [
   {
     id: 11.5, type: 'content', badge: 'Power User', title: 'Stash: GUI vs CLI',
     content: (
-      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '1.2rem' }}>
           GitHub Desktop supports basic stashing, but for <strong>surgical operations</strong>, the CLI is essential.
         </p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem', flex: 1 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', paddingBottom: '3rem' }}>
           {[
             { t: 'Visibility', d: 'Only shows generic "Stashed changes" entry.', c: 'git stash show -p stash@{0}' },
             { t: 'Selective Stash', d: 'Cannot stash specific files only.', c: 'git stash push -- demo.txt' },
@@ -985,10 +1006,10 @@ const SLIDES = [
             { t: 'Partial Restore', d: 'No file-level restore (must restore all).', c: 'git checkout stash@{0} -- demo.txt' },
             { t: 'Advanced Ops', d: 'No drop, specific apply, or branch creation.', c: 'git stash branch <name> stash@{0}' }
           ].map((item, idx) => (
-            <div key={idx} className="card" style={{ padding: '0.75rem 1rem', display: 'flex', flexDirection: 'column', fontSize: '0.9rem' }}>
-              <h4 style={{ color: 'var(--accent-blue)', marginBottom: '0.4rem', fontSize: '1.05rem' }}>{idx+1}. {item.t}</h4>
-              <p style={{ marginBottom: '0.6rem', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Desktop: {item.d}</p>
-              <div className="code-block" style={{ marginTop: 'auto', fontSize: '0.8rem', padding: '0.4rem 0.6rem' }}>
+            <div key={idx} className="card" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', fontSize: '0.9rem' }}>
+              <h4 style={{ color: 'var(--accent-blue)', marginBottom: '0.4rem', fontSize: '1.05rem' }}>{idx + 1}. {item.t}</h4>
+              <p style={{ marginBottom: '0.8rem', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Desktop: {item.d}</p>
+              <div className="code-block" style={{ marginTop: 'auto', fontSize: '0.8rem', padding: '0.6rem' }}>
                 <span style={{ color: 'var(--accent-cyan)' }}>CLI: </span> {item.c}
               </div>
             </div>
@@ -1031,6 +1052,12 @@ const SLIDES = [
       </div>
     )
   },
+  {
+    id: 12, type: 'title', badge: 'Session Complete', 
+    title: 'Thank You!', 
+    subtitle: 'Master the CLI, master the workflow.', 
+    date: 'April 2026'
+  },
 ]
 
 // ─── App ──────────────────────────────────────────────────────────────────────
@@ -1057,19 +1084,19 @@ function App() {
       {/* Background Decorative Elements */}
       <div className="bg-glow" />
       <div className="bg-grid" />
-      
+
       <div className="presentation-container">
         <AnimatePresence mode="wait">
-          <motion.div key={cur} 
+          <motion.div key={cur}
             className={`slide ${slide.type === 'title' ? 'slide-cover' : ''} ${slide.type === 'full-visual' ? 'slide-full' : ''}`}
             initial={{ opacity: 0, scale: 0.98, y: 20 }}
-            animate={{ opacity: 1, scale: 1,    y: 0  }}
-            exit   ={{ opacity: 0, scale: 0.98, y: -15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.98, y: -15 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}>
 
             {slide.type === 'title' ? (
               <div className="cover-split-layout">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, x: -40 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2, duration: 0.6 }}
@@ -1085,10 +1112,10 @@ function App() {
                     <span className="meta-value">{slide.date}</span>
                   </div>
 
-                 
+
                 </motion.div>
 
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.8, x: 40 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   transition={{ delay: 0.4, duration: 0.8, type: 'spring' }}
@@ -1099,7 +1126,7 @@ function App() {
                     <div className="hero-glow-ring-1" />
                     <div className="hero-glow-ring-2" />
                     <Github size={240} strokeWidth={1} className="hero-github-icon" />
-                    
+
                     {/* Floating Git branch icons */}
                     <motion.div className="float-icon fi-1" animate={{ y: [0, -20, 0] }} transition={{ repeat: Infinity, duration: 4 }}><GitBranch size={40} /></motion.div>
                     <motion.div className="float-icon fi-2" animate={{ y: [0, 20, 0] }} transition={{ repeat: Infinity, duration: 5, delay: 0.5 }}><GitMerge size={32} /></motion.div>
@@ -1109,42 +1136,42 @@ function App() {
               </div>
 
             ) : slide.type === 'strategy-overview' ? (() => {
-                const isSync = slide.id === 3.5;
-                const items = isSync ? [
-                  { id: 4,   color: '#34d399', label: 'Commit vs Push', Icon: Database,   cmd: 'local ↔ remote', desc: 'Managing local changes and publishing code.' },
-                  { id: 4.5, color: '#22d3ee', label: 'Fetch vs Pull',  Icon: RefreshCcw, cmd: 'remote ↔ local', desc: 'Syncing your machine with team updates safely.' }
-                ] : [
-                  { id: 6, color: '#34d399', label: 'Merge',  Icon: GitMerge,  cmd: 'git merge',          desc: 'Preserve history. Safe for public branches.' },
-                  { id: 7, color: '#22d3ee', label: 'Rebase', Icon: RefreshCcw, cmd: 'git rebase',         desc: 'Linear timeline. Rewrites history with new SHAs.' },
-                  { id: 8, color: '#c084fc', label: 'Squash', Icon: Layers,     cmd: 'git merge --squash', desc: 'Condense WIP commits into one clean commit.' }
-                ];
-                return (
-                  <>
-                    <div className="slide-header">
-                      <div className="badge">{slide.badge}</div>
-                      <h2>{slide.title}</h2>
-                      <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.4rem' }}>{slide.subtitle}</p>
+              const isSync = slide.id === 3.5;
+              const items = isSync ? [
+                { id: 4, color: '#34d399', label: 'Commit vs Push', Icon: Database, cmd: 'local ↔ remote', desc: 'Managing local changes and publishing code.' },
+                { id: 4.5, color: '#22d3ee', label: 'Fetch vs Pull', Icon: RefreshCcw, cmd: 'remote ↔ local', desc: 'Syncing your machine with team updates safely.' }
+              ] : [
+                { id: 6, color: '#34d399', label: 'Merge', Icon: GitMerge, cmd: 'git merge', desc: 'Preserve history. Safe for public branches.' },
+                { id: 7, color: '#22d3ee', label: 'Rebase', Icon: RefreshCcw, cmd: 'git rebase', desc: 'Linear timeline. Rewrites history with new SHAs.' },
+                { id: 8, color: '#c084fc', label: 'Squash', Icon: Layers, cmd: 'git merge --squash', desc: 'Condense WIP commits into one clean commit.' }
+              ];
+              return (
+                <>
+                  <div className="slide-header">
+                    <div className="badge">{slide.badge}</div>
+                    <h2>{slide.title}</h2>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '1rem', marginTop: '0.4rem' }}>{slide.subtitle}</p>
+                  </div>
+                  <div className="slide-content">
+                    <div className={isSync ? "grid-2" : "grid-3"}>
+                      {items.map(({ id, color, label, Icon, cmd, desc }) => (
+                        <div key={id} className="card"
+                          onClick={() => setCur(SLIDES.findIndex(s => s.id === id))}
+                          style={{ cursor: 'pointer', borderColor: color + '44', textAlign: 'center', height: '100%' }}>
+                          <div className="card-icon" style={{ margin: '0 auto 0.85rem', color, background: color + '18' }}><Icon size={24} /></div>
+                          <h3 style={{ color, fontSize: '1.4rem', fontWeight: 800 }}>{label}</h3>
+                          <p style={{ fontSize: '0.95rem', margin: '0.6rem 0 1rem' }}>{desc}</p>
+                          <div style={{ marginTop: 'auto', fontFamily: 'monospace', fontSize: '0.8rem', color, opacity: 0.8, padding: '0.4rem', background: 'rgba(0,0,0,0.2)', borderRadius: '6px' }}>{cmd} →</div>
+                        </div>
+                      ))}
                     </div>
-                    <div className="slide-content">
-                      <div className={isSync ? "grid-2" : "grid-3"}>
-                        {items.map(({ id, color, label, Icon, cmd, desc }) => (
-                          <div key={id} className="card"
-                            onClick={() => setCur(SLIDES.findIndex(s => s.id === id))}
-                            style={{ cursor: 'pointer', borderColor: color + '44', textAlign: 'center', height: '100%' }}>
-                            <div className="card-icon" style={{ margin: '0 auto 0.85rem', color, background: color + '18' }}><Icon size={24} /></div>
-                            <h3 style={{ color, fontSize: '1.4rem', fontWeight: 800 }}>{label}</h3>
-                            <p style={{ fontSize: '0.95rem', margin: '0.6rem 0 1rem' }}>{desc}</p>
-                            <div style={{ marginTop: 'auto', fontFamily: 'monospace', fontSize: '0.8rem', color, opacity: 0.8, padding: '0.4rem', background: 'rgba(0,0,0,0.2)', borderRadius: '6px' }}>{cmd} →</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                );
-              })()
-            : slide.type === 'full-visual' ? (
-               <div className="slide-content" style={{ padding: 0, flex: 1, display: 'flex', flexDirection: 'column' }}>{slide.content}</div>
-            ) : (
+                  </div>
+                </>
+              );
+            })()
+              : slide.type === 'full-visual' ? (
+                <div className="slide-content" style={{ padding: 0, flex: 1, display: 'flex', flexDirection: 'column' }}>{slide.content}</div>
+              ) : (
                 <>
                   <div className="slide-header">
                     <div className="badge">{slide.badge}</div>
@@ -1152,29 +1179,29 @@ function App() {
                   </div>
                   <div className="slide-content">{slide.content}</div>
                 </>
-            )}
-
-            {/* Global Slide Progress (Minimal) */}
-            {slide.type !== 'title' && slide.type !== 'full-visual' && (
-              <div className="global-progress">
-                <div className="progress-track">
-                  <motion.div 
-                    className="progress-fill" 
-                    animate={{ width: `${((cur + 1) / SLIDES.length) * 100}%` }}
-                  />
-                </div>
-                <div className="progress-text">{cur + 1} / {SLIDES.length}</div>
-              </div>
-            )}
+              )}
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {slide.type !== 'full-visual' && (
+      {slide.type !== 'full-visual' && slide.type !== 'title' && (
         <div className="site-footer">
-          <span className="footer-brand"> From Basics to Real-World Workflow</span>
-          <span className="footer-pipe">|</span>
-          <span className="footer-title">{slide.title}</span>
+          <span className="footer-brand">Git Essentials</span>
+
+          {slide.type !== 'title' && (
+            <div className="global-progress">
+              <div className="progress-track">
+                <motion.div
+                  className="progress-fill"
+                  animate={{ width: `${((cur + 1) / SLIDES.length) * 100}%` }}
+                  transition={{ duration: 0.4 }}
+                />
+              </div>
+              <div className="progress-text">{cur + 1} / {SLIDES.length}</div>
+            </div>
+          )}
+
+          <span className="footer-title" style={{ marginLeft: 'auto', opacity: 0.4 }}>Use Arrows to Navigate</span>
         </div>
       )}
     </div>

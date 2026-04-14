@@ -67,10 +67,11 @@ body {
 
 .presentation-container {
   width: 100%;
-  max-width: 1600px; /* Expansive width */
-  height: 85vh;
+  max-width: 1600px;
+  flex: 1;
   display: flex;
   align-items: stretch;
+  min-height: 0; /* Critical for inner scrolling */
 }
 
 .slide {
@@ -91,6 +92,10 @@ body {
 
 .slide-full {
   padding: 0 !important;
+}
+
+.slide-cover {
+  overflow: hidden !important;
 }
 
 /* ── Tooltips ── */
@@ -339,6 +344,7 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   padding-top: 0.5rem;
+  padding-bottom: 4rem; /* Safe zone for scrolling */
 }
 
 /* Common Components */
@@ -375,16 +381,11 @@ body {
 
 /* Footer & Progress */
 .global-progress {
-  position: absolute;
-  bottom: 0px;
-  left: 0;
-  width: 100%;
   display: flex;
   align-items: center;
-  padding: 2rem 5rem;
   gap: 2rem;
-  background: linear-gradient(to top, rgba(2, 6, 23, 0.8), transparent);
-  border-top: 1px solid rgba(255,255,255,0.03);
+  flex: 1;
+  padding: 0 2rem;
 }
 
 .progress-track {
@@ -404,13 +405,12 @@ body {
 .site-footer {
   width: 100%;
   max-width: 1600px;
-  padding: 1.5rem 0;
+  height: 80px;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
   font-size: 0.9rem;
   color: var(--text-secondary);
-  opacity: 0.5;
 }
 
 .footer-brand { font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; }
@@ -455,7 +455,6 @@ body {
   height: 12px;
   background: var(--accent-blue);
   border-radius: 50%;
-  box-shadow: 0 0 15px var(--accent-blue);
   transform: translateY(-50%);
 }
 
